@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
 const tripSchema = new mongoose.Schema({
-  departure: String,
-  arrival: String,
+  departure: {type: String, required: true},
+  arrival: {type: String, required: true},
   date: Date,
   price: Number,
 });
