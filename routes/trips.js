@@ -1,16 +1,28 @@
 var express = require("express");
 var router = express.Router();
 var Trip = require("../models/trips");
+const moment = require('moment')
 
 /* GET trips listing for departure/arrival/date */
-router.get("/trips", function (req, res) {
-  Trip.find({
-    departure: req.body.departure,
-    arrival: req.body.arrival,
-    date: req.body.date,
-  }).then((data) => {
-    res.json({ result: true, trips: data });
-  });
+router.get("/:departure/:arrival/:date", function (req, res) {
+    const { departure, arrival, date } = req.params;
+
+    // On crée une plage de dates pour la journée entière
+    const startOfDay = moment(date).startOf('day').toDate();
+    const endOfDay = moment(date).endOf('day').toDate();
+
+    Trip.find({
+        departure: { $regex: new RegExp(departure, "i") }, // "i" pour ignorer la casse
+        arrival: { $regex: new RegExp(arrival, "i") },
+        date: { $gte: startOfDay, $lte: endOfDay },
+    }).then((data) => {
+        // Important : On renvoie result: false si le tableau est vide
+        if (data.length > 0) {
+            res.json({ result: true, trips: data });
+        } else {
+            res.json({ result: false, trips: [] });
+        }
+    });
 });
 
 /* GET go to cart */
