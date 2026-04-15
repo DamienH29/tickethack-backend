@@ -1,7 +1,8 @@
 var express = require("express");
 var router = express.Router();
 var Trip = require("../models/trips");
-const moment = require('moment')
+const moment = require('moment');
+var Book = require("../models/books");
 
 /* GET trips listing for departure/arrival/date */
 router.get("/:departure/:arrival/:date", function (req, res) {
@@ -29,8 +30,19 @@ router.get("/:departure/:arrival/:date", function (req, res) {
 router.get("/cart", function (req, res) {
 });
 
+/* POST put to bookings */
+router.post
+
 /* GET go to bookings */
 router.get("/bookings", function (req, res) {
+  Cart.find()
+  .then((data) => {
+    if(data.length > 0) {
+      res.json({result : true, bookings : data})
+    } else {
+    res.json({result : false, error : "No bookings found."})
+    }
+  })
 });
 
 /* GET go to main page */
