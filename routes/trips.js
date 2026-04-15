@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var Trip = require("../models/trips");
+var Cart = require("../models/carts");
 const moment = require('moment')
 
 /* GET trips listing for departure/arrival/date */
@@ -25,16 +26,27 @@ router.get("/:departure/:arrival/:date", function (req, res) {
     });
 });
 
-/* GET go to cart */
-router.get("/cart", function (req, res) {
+/* POST add to cart */
+router.post("/cart", (req, res) => {
+    const newTrip = new Cart({
+        traject: req.body.traject,
+        hour: req.body.hour,
+        price: req.body.price,
+    });
+    newTrip.save().then(() => {
+        res.json({ result: true });
+    });
 });
 
-/* GET go to bookings */
-router.get("/bookings", function (req, res) {
+router.delete("/cart/:id", (req, res) => {
+    Cart.deleteOne({ _id: req.params.id }).then(data => {
+        if (data.deletedCount > 0) {
+            res.json({ result: true });
+        } else {
+            res.json({ result: false, error: "Trip not found" });
+        }
+    });
 });
 
-/* GET go to main page */
-router.get("/", function (req, res) {
-});
 
 module.exports = router;
