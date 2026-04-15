@@ -38,6 +38,12 @@ router.post("/cart", (req, res) => {
   });
 });
 
+/* GET add to cart */
+router.get("/cart", (req, res) => {
+  Cart.find()
+    .then((data) => res.json({ result: true, cart: data }));
+});
+
 /* DELETE delete trip in cart */
 router.delete("/cart/:id", (req, res) => {
   Cart.deleteOne({ _id: req.params.id }).then((data) => {

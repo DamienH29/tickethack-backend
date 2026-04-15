@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 
 const cartSchema = new mongoose.Schema({
   traject: String,
-  hour: Date,
-  price: Number,
+  hour: String,
+  price: String,
 });
 
 const Cart = mongoose.model("carts", cartSchema);
