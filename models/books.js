@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const bookSchema = new mongoose.Schema({
     traject: String,
-    hour: Date,
+    hour: String,
     price: Number,
 });
 

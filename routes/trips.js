@@ -1,7 +1,8 @@
 var express = require("express");
 var router = express.Router();
 var Trip = require("../models/trips");
-var Cart = require("../models/carts");
+var Cart = require("../models/carts")
+var Booking = require("../models/books")
 const moment = require("moment");
 
 /* GET trips listing for departure/arrival/date */
@@ -53,6 +54,37 @@ router.delete("/cart/:id", (req, res) => {
       res.json({ result: false, error: "Trip not found" });
     }
   });
+});
+
+router.post('/books', (req, res) => {
+    Cart.find().then(data => {
+        if (data.length > 0) {
+            const tripsToSave = data.map(trip => ({
+                traject: trip.traject,
+                hour: trip.hour,
+                price: trip.price,
+            }));
+
+            Booking.insertMany(tripsToSave).then(() => {
+                Cart.deleteMany().then(() => {
+                    res.json({ result: true });
+                });
+            });
+        } else {
+            res.json({ result: false, error: "Cart is empty" });
+        }
+    });
+});
+
+
+router.get('/books', (req, res) => {
+    Booking.find().then(data => {
+        if (data) {
+            res.json({ result: true, bookings: data });
+        } else {
+            res.json({ result: false, error: "No bookings found" });
+        }
+    });
 });
 
 module.exports = router;
